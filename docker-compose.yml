@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  kurtbot:
+    build: .
+    container_name: kurtbot
+    restart: always          # Se reinicia SOLO si se cae o si reinicia la mini PC
+    ports:
+      - "3000:3000"          # Panel admin accesible en http://IP_MINIPC:3000/admin
+    environment:
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD}
+      - PORT=3000
+      - BOT_NAME=KurtBot
+    volumes:
+      # Persistencia: la sesión de WhatsApp y la base de datos sobreviven reinicios
+      - ./whatsapp-session:/app/.wwebjs_auth
+      - ./data:/app/data
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"      # Logs máximo 10MB, no llena el disco
+        max-file: "3"

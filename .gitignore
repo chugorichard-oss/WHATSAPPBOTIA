@@ -1,0 +1,15 @@
+# Entorno y secretos
+.env
+node_modules/
+
+# Sesión de WhatsApp (no subir — es personal)
+whatsapp-session/
+auth_info_baileys/
+
+# Datos locales
+data/conversations/
+*.log
+
+# Sistema
+.DS_Store
+Thumbs.db
