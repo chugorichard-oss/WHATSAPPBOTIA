@@ -1,0 +1,98 @@
+{
+  "campaign_info": {
+    "candidate": "Kurt Reintsch",
+    "party": "Libertad y República (LIBRE)",
+    "position": "Candidato a Gobernador de La Paz",
+    "election_date": "22 de marzo de 2026",
+    "slogan": "El Boliviano Puede"
+  },
+  "faqs": [
+    {
+      "id": "1",
+      "category": "sobre_kurt",
+      "question": "¿Quién es Kurt Reintsch?",
+      "answer": "Kurt Reintsch es candidato a Gobernador de La Paz por el partido Libertad y República (LIBRE). Es expresidente del Club The Strongest y empresario paceño con visión de modernización. Su propuesta se basa en cooperación internacional, alianzas con el sector privado y transformación digital para beneficiar a todos los paceños.",
+      "keywords": ["kurt", "quién", "candidato", "reintsch", "quien es"]
+    },
+    {
+      "id": "2",
+      "category": "sobre_kurt",
+      "question": "¿Cuál es el partido de Kurt?",
+      "answer": "Kurt Reintsch postula por Libertad y República, conocido como LIBRE. Es un partido que cree en la libertad, el desarrollo y en que el boliviano tiene todo el talento para transformar su propio país. ¡El Boliviano Puede!",
+      "keywords": ["partido", "libre", "libertad", "república", "sigla"]
+    },
+    {
+      "id": "3",
+      "category": "propuestas",
+      "question": "¿Cuáles son las propuestas principales de Kurt?",
+      "answer": "Kurt tiene 4 pilares clave: 1) Salud Digital: modernizar el SEDES con ENTEL Cloud y Starlink para llevar atención médica hasta los municipios más alejados. 2) Cooperación Internacional: traer inversión extranjera sin endeudar a La Paz. 3) Desarrollo Productivo: alianzas público-privadas para generar empleos reales. 4) Transparencia Total: gestión con resultados medibles y rendición de cuentas.",
+      "keywords": ["propuestas", "plan", "qué propone", "proyectos", "que hará"]
+    },
+    {
+      "id": "4",
+      "category": "salud",
+      "question": "¿Qué hará Kurt con la salud en La Paz?",
+      "answer": "¡La salud es una prioridad de Kurt! El plan es digitalizar el SEDES La Paz usando ENTEL Cloud (nube boliviana, sin costo extra por convenio estatal) y Starlink vía ENTEL para conectar más de 150 municipios alejados. Cada paceño tendrá su historial clínico digital, podrá recibir consultas de especialistas por videollamada, y los médicos rurales tendrán tutoría en tiempo real. ¡El Boliviano Puede tener salud de primer nivel!",
+      "keywords": ["salud", "sedes", "hospital", "médico", "entel", "starlink", "digital"]
+    },
+    {
+      "id": "5",
+      "category": "salud",
+      "question": "¿Cómo funcionará la telemedicina?",
+      "answer": "Con la alianza ENTEL-Starlink ya firmada en 2025, vamos a llevar internet satelital estable a los centros de salud más remotos del departamento. Un médico en Charazani podrá hacer videoconsulta con un especialista de La Paz en tiempo real. Los pacientes rurales ya no tendrán que viajar horas para ver a un doctor. ¡La tecnología al servicio del pueblo paceño!",
+      "keywords": ["telemedicina", "videoconsulta", "rural", "remoto", "internet", "satelital"]
+    },
+    {
+      "id": "6",
+      "category": "economia",
+      "question": "¿Cómo va a generar empleos Kurt?",
+      "answer": "Kurt tiene claro que el presupuesto de la Gobernación solo no alcanza. Por eso su estrategia es atraer cooperación internacional y alianzas con empresas privadas para multiplicar los recursos. Sectores clave: turismo sostenible, tecnología, agroindustria y manufactura. La meta es crear al menos 50,000 nuevas fuentes de trabajo en el departamento durante su gestión.",
+      "keywords": ["empleo", "trabajo", "economía", "empresa", "inversión"]
+    },
+    {
+      "id": "7",
+      "category": "como_participar",
+      "question": "¿Cómo puedo unirme a la campaña?",
+      "answer": "¡Gracias por tu interés! Hay varias formas de sumarte: Voluntariado: ayudar en eventos, puerta a puerta o redes sociales. Difusión: compartir las propuestas de Kurt con tu familia y amigos. Donación: cualquier aporte ayuda a llegar a más paceños. Eventos: participar en mítines y actividades. Escríbeme 'QUIERO UNIRME' y te conectamos directamente con el equipo de campaña. ¡Juntos, el boliviano puede!",
+      "keywords": ["unirme", "voluntario", "campaña", "participar", "ayudar", "quiero unirme", "cómo ayudo"]
+    },
+    {
+      "id": "8",
+      "category": "como_participar",
+      "question": "¿Dónde votar por Kurt el 22 de marzo?",
+      "answer": "Las elecciones subnacionales son el 22 de marzo de 2026. Para votar por Kurt Reintsch como Gobernador, busca la papeleta de la Gobernación de La Paz y marca a Libertad y República (LIBRE). Recuerda llevar tu carnet de identidad vigente. ¡Tu voto es el poder del pueblo paceño!",
+      "keywords": ["votar", "voto", "elecciones", "22 de marzo", "urna", "papeleta"]
+    },
+    {
+      "id": "9",
+      "category": "contacto",
+      "question": "¿Cómo contactar al equipo de Kurt?",
+      "answer": "Puedes contactarnos por: WhatsApp (estás aquí, ya lo hiciste 😊), nuestras redes sociales, o visitando nuestros puntos de campaña en La Paz. Si quieres ser voluntario o tienes una propuesta para Kurt, escribe 'CONTACTO HUMANO' y te conectamos con alguien del equipo en las próximas horas.",
+      "keywords": ["contacto", "comunicar", "hablar", "teléfono", "dirección"]
+    },
+    {
+      "id": "10",
+      "category": "propuestas",
+      "question": "¿Qué hará Kurt con la educación?",
+      "answer": "La educación es clave para el desarrollo de La Paz. Kurt propone: 1) Conectividad en todas las unidades educativas con Starlink-ENTEL. 2) Laboratorios tecnológicos en provincias. 3) Becas para técnicos y profesionales bolivianos en áreas estratégicas. 4) Capacitación docente en herramientas digitales. El conocimiento es el camino, y el boliviano tiene el talento para triunfar.",
+      "keywords": ["educación", "escuela", "colegio", "becas", "universidad", "estudios"]
+    },
+    {
+      "id": "11",
+      "category": "propuestas",
+      "question": "¿Qué planes tiene Kurt para el campo y el agro?",
+      "answer": "Las provincias y el campo son el corazón de La Paz. Kurt propone: Conectividad rural con Starlink para que los agricultores puedan acceder a precios de mercado en tiempo real. Asistencia técnica modernizada. Cadenas de valor para que el producto paceño llegue a mercados nacionales e internacionales. ¡El campo boliviano tiene futuro con LIBRE!",
+      "keywords": ["campo", "agro", "agricultor", "rural", "provincia", "campo", "campesino"]
+    },
+    {
+      "id": "12",
+      "category": "elecciones",
+      "question": "¿Cuándo son las elecciones?",
+      "answer": "Las elecciones subnacionales 2026 son el domingo 22 de marzo de 2026. Ese día elegiremos Gobernador, asambleístas departamentales, alcaldes y concejales. ¡Marca tu calendario y vota por el cambio que La Paz necesita! 🗳️",
+      "keywords": ["cuándo", "fecha", "elecciones", "cuando son", "marzo"]
+    }
+  ],
+  "conversation_starters": [
+    "¡Hola! Soy KurtBot, el asistente digital de la campaña de Kurt Reintsch para la Gobernación de La Paz. 🔵🔴⚪\n\n¿En qué te puedo ayudar hoy?\n\n💡 Puedes preguntarme sobre:\n• Las propuestas de Kurt\n• Cómo unirte a la campaña\n• Salud digital, educación, empleo\n• Cómo y dónde votar el 22 de marzo\n\n¡El Boliviano Puede! 🚀"
+  ]
+}
