@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KurtBot — Panel de Administración</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --blue:    #003087;
+    --blue2:   #1565C0;
+    --red:     #C62828;
+    --red2:    #EF5350;
+    --white:   #FFFFFF;
+    --bg:      #F0F4FF;
+    --dark:    #011A4B;
+    --gray:    #546E7A;
+    --surface: #FFFFFF;
+    --border:  #CBD5E1;
+    --success: #1B8A4C;
+    --gold:    #FFD600;
+    --shadow:  0 4px 20px rgba(0,48,135,0.12);
+  }
+
+  body {
+    font-family: 'Sora', sans-serif;
+    background: var(--bg);
+    color: var(--dark);
+    min-height: 100vh;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: var(--dark);
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 64px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.3);
+  }
+  .header-left { display: flex; align-items: center; gap: 1rem; }
+  .header-logo {
+    width: 10px;
+    height: 40px;
+    background: linear-gradient(to bottom, var(--white) 33%, var(--blue2) 33%, var(--blue2) 66%, var(--red) 66%);
+    border-radius: 2px;
+  }
+  .header-title { color: var(--white); font-size: 1.1rem; font-weight: 700; }
+  .header-title span { color: var(--gold); }
+  .status-badge {
+    display: flex; align-items: center; gap: 0.5rem;
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.2);
+    padding: 0.35rem 0.9rem;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    color: var(--white);
+  }
+  .status-dot { width: 8px; height: 8px; border-radius: 50%; background: #9E9E9E; }
+  .status-dot.connected { background: #4CAF50; box-shadow: 0 0 8px #4CAF50; }
+  .status-dot.disconnected { background: var(--red2); }
+
+  /* ── LAYOUT ── */
+  .container { max-width: 1400px; margin: 0 auto; padding: 2rem; }
+
+  /* ── LOGIN SCREEN ── */
+  .login-screen {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--dark) 0%, var(--blue) 60%, var(--red) 100%);
+  }
+  .login-card {
+    background: var(--white);
+    border-radius: 16px;
+    padding: 2.5rem;
+    width: 380px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  }
+  .login-flag {
+    display: flex;
+    height: 6px;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 1.5rem;
+  }
+  .login-flag div { flex: 1; }
+  .flag-r { background: var(--red); }
+  .flag-w { background: var(--white); border: 1px solid #ddd; }
+  .flag-b { background: var(--blue); }
+  .login-card h2 { font-size: 1.5rem; font-weight: 800; color: var(--dark); margin-bottom: 0.3rem; }
+  .login-card p { color: var(--gray); font-size: 0.9rem; margin-bottom: 1.5rem; }
+  .form-group { margin-bottom: 1rem; }
+  .form-group label { display: block; font-size: 0.8rem; font-weight: 600; color: var(--gray); margin-bottom: 0.4rem; text-transform: uppercase; letter-spacing: 0.05em; }
+  .form-control {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    font-family: 'Sora', sans-serif;
+    font-size: 0.95rem;
+    transition: border-color 0.2s;
+    outline: none;
+  }
+  .form-control:focus { border-color: var(--blue2); }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-family: 'Sora', sans-serif;
+    font-weight: 700;
+    font-size: 0.95rem;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s;
+  }
+  .btn-primary { background: var(--blue); color: var(--white); width: 100%; }
+  .btn-primary:hover { background: var(--blue2); transform: translateY(-1px); }
+  .btn-red { background: var(--red); color: var(--white); }
+  .btn-red:hover { background: var(--red2); }
+  .btn-success { background: var(--success); color: var(--white); }
+  .btn-outline { background: transparent; color: var(--blue); border: 2px solid var(--blue); }
+  .btn-outline:hover { background: var(--blue); color: var(--white); }
+  .btn-sm { padding: 0.4rem 0.9rem; font-size: 0.8rem; }
+  .btn-danger { background: #FFEBEE; color: var(--red); border: 1px solid #FFCDD2; }
+  .btn-danger:hover { background: var(--red); color: var(--white); }
+
+  /* ── MAIN DASHBOARD ── */
+  #dashboard { display: none; }
+  #dashboard.visible { display: block; }
+
+  /* ── QR SECTION ── */
+  .qr-banner {
+    background: linear-gradient(135deg, var(--dark), var(--blue));
+    border-radius: 16px;
+    padding: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    margin-bottom: 2rem;
+    color: var(--white);
+  }
+  .qr-box {
+    background: var(--white);
+    border-radius: 12px;
+    padding: 1rem;
+    min-width: 160px;
+    min-height: 160px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .qr-box img { width: 140px; height: 140px; }
+  .qr-text h3 { font-size: 1.4rem; font-weight: 800; margin-bottom: 0.5rem; }
+  .qr-text p { opacity: 0.8; font-size: 0.9rem; line-height: 1.6; }
+  .qr-steps { margin-top: 1rem; }
+  .qr-steps li { font-size: 0.85rem; opacity: 0.9; margin-bottom: 0.3rem; padding-left: 1.2rem; position: relative; }
+  .qr-steps li::before { content: '✓'; position: absolute; left: 0; color: var(--gold); font-weight: 700; }
+
+  /* ── STATS GRID ── */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.25rem;
+    margin-bottom: 2rem;
+  }
+  .stat-card {
+    background: var(--surface);
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: var(--shadow);
+    border-left: 4px solid var(--blue2);
+    position: relative;
+    overflow: hidden;
+  }
+  .stat-card.red { border-left-color: var(--red); }
+  .stat-card.green { border-left-color: var(--success); }
+  .stat-card.gold { border-left-color: var(--gold); }
+  .stat-number { font-size: 2.2rem; font-weight: 800; color: var(--dark); line-height: 1; }
+  .stat-label { font-size: 0.8rem; color: var(--gray); margin-top: 0.3rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+  .stat-emoji { position: absolute; right: 1rem; top: 1rem; font-size: 2rem; opacity: 0.15; }
+
+  /* ── CONTENT GRID ── */
+  .content-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+  }
+  @media (max-width: 900px) { .content-grid { grid-template-columns: 1fr; } }
+
+  /* ── CARDS ── */
+  .card {
+    background: var(--surface);
+    border-radius: 16px;
+    box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+  .card-header {
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .card-header h3 { font-size: 1rem; font-weight: 700; color: var(--dark); }
+  .card-body { padding: 1.5rem; }
+
+  /* ── FAQ TABLE ── */
+  .full-width { grid-column: 1 / -1; }
+  .faq-table { width: 100%; border-collapse: collapse; }
+  .faq-table th {
+    text-align: left;
+    padding: 0.75rem 1rem;
+    background: var(--bg);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--gray);
+    font-weight: 700;
+  }
+  .faq-table td {
+    padding: 0.85rem 1rem;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.9rem;
+  }
+  .faq-table tr:last-child td { border-bottom: none; }
+  .faq-table tr:hover td { background: #F8FAFF; }
+  .category-badge {
+    background: #EEF2FF;
+    color: var(--blue);
+    padding: 0.2rem 0.6rem;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+  }
+  .td-actions { display: flex; gap: 0.5rem; }
+
+  /* ── MODAL ── */
+  .modal-overlay {
+    display: none;
+    position: fixed; inset: 0;
+    background: rgba(1,26,75,0.6);
+    backdrop-filter: blur(4px);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: var(--white);
+    border-radius: 16px;
+    padding: 2rem;
+    width: 500px;
+    max-width: 95vw;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  }
+  .modal h3 { font-size: 1.2rem; font-weight: 800; margin-bottom: 1.5rem; color: var(--dark); }
+  .modal-footer { display: flex; gap: 0.75rem; justify-content: flex-end; margin-top: 1.5rem; }
+
+  /* ── TEST CHAT ── */
+  .chat-box {
+    background: #F0F4FF;
+    border-radius: 12px;
+    padding: 1rem;
+    min-height: 200px;
+    max-height: 300px;
+    overflow-y: auto;
+    margin-bottom: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  .chat-msg {
+    padding: 0.65rem 1rem;
+    border-radius: 12px;
+    font-size: 0.88rem;
+    line-height: 1.5;
+    max-width: 85%;
+    white-space: pre-wrap;
+  }
+  .chat-msg.user {
+    background: var(--blue);
+    color: var(--white);
+    align-self: flex-end;
+    border-bottom-right-radius: 4px;
+  }
+  .chat-msg.bot {
+    background: var(--white);
+    color: var(--dark);
+    align-self: flex-start;
+    border-bottom-left-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  }
+  .chat-msg.typing {
+    background: var(--white);
+    align-self: flex-start;
+    color: var(--gray);
+    font-style: italic;
+  }
+  .chat-input-row { display: flex; gap: 0.5rem; }
+  .chat-input-row input {
+    flex: 1;
+    padding: 0.75rem 1rem;
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    font-family: 'Sora', sans-serif;
+    font-size: 0.9rem;
+    outline: none;
+  }
+  .chat-input-row input:focus { border-color: var(--blue2); }
+
+  /* ── BROADCAST ── */
+  .broadcast-area { width: 100%; min-height: 100px; padding: 0.75rem; border: 2px solid var(--border); border-radius: 8px; font-family: 'Sora', sans-serif; font-size: 0.9rem; outline: none; resize: vertical; }
+  .broadcast-area:focus { border-color: var(--blue2); }
+
+  /* ── TOPICS CHART ── */
+  .topic-bar { margin-bottom: 0.65rem; }
+  .topic-label { display: flex; justify-content: space-between; font-size: 0.82rem; margin-bottom: 0.25rem; }
+  .topic-track { background: #E3EBF8; border-radius: 999px; height: 8px; overflow: hidden; }
+  .topic-fill { height: 100%; background: linear-gradient(90deg, var(--blue2), var(--blue)); border-radius: 999px; transition: width 0.8s ease; }
+
+  .alert { padding: 0.75rem 1rem; border-radius: 8px; font-size: 0.88rem; margin-bottom: 1rem; }
+  .alert-success { background: #E8F5E9; color: #1B5E20; border: 1px solid #A5D6A7; }
+  .alert-error { background: #FFEBEE; color: #B71C1C; border: 1px solid #FFCDD2; }
+  .text-muted { color: var(--gray); font-size: 0.85rem; }
+</style>
+</head>
+<body>
+
+<!-- ── LOGIN ── -->
+<div id="loginScreen" class="login-screen">
+  <div class="login-card">
+    <div class="login-flag"><div class="flag-r"></div><div class="flag-w"></div><div class="flag-b"></div></div>
+    <h2>KurtBot Admin</h2>
+    <p>Panel de administración del bot de campaña de Kurt Reintsch — LIBRE La Paz</p>
+    <div class="form-group">
+      <label>Contraseña de Administrador</label>
+      <input type="password" class="form-control" id="loginPassword" placeholder="Ingresa la contraseña..." onkeypress="if(event.key==='Enter') login()">
+    </div>
+    <div id="loginError" class="alert alert-error" style="display:none">Contraseña incorrecta</div>
+    <button class="btn btn-primary" onclick="login()">🔐 Ingresar al Panel</button>
+  </div>
+</div>
+
+<!-- ── HEADER ── -->
+<header id="mainHeader" style="display:none">
+  <div class="header-left">
+    <div class="header-logo"></div>
+    <div class="header-title">KurtBot <span>LIBRE</span> — Panel Admin</div>
+  </div>
+  <div class="status-badge">
+    <div class="status-dot" id="statusDot"></div>
+    <span id="statusText">Verificando...</span>
+  </div>
+</header>
+
+<!-- ── DASHBOARD ── -->
+<div id="dashboard" class="container">
+
+  <!-- QR Banner -->
+  <div id="qrBanner" class="qr-banner" style="display:none">
+    <div class="qr-box" id="qrBox">
+      <span style="font-size:2rem">⏳</span>
+    </div>
+    <div class="qr-text">
+      <h3>📱 Conectar WhatsApp Business</h3>
+      <p>Escanea el código QR con tu teléfono para conectar el bot a tu cuenta de WhatsApp Business.</p>
+      <ul class="qr-steps">
+        <li>Abre WhatsApp Business en tu teléfono</li>
+        <li>Ve a Menú → Dispositivos vinculados</li>
+        <li>Toca "Vincular dispositivo"</li>
+        <li>Escanea el código QR</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-grid" id="statsGrid">
+    <div class="stat-card">
+      <div class="stat-number" id="statMessages">—</div>
+      <div class="stat-label">Mensajes Totales</div>
+      <div class="stat-emoji">💬</div>
+    </div>
+    <div class="stat-card red">
+      <div class="stat-number" id="statUsers">—</div>
+      <div class="stat-label">Usuarios Únicos</div>
+      <div class="stat-emoji">👥</div>
+    </div>
+    <div class="stat-card green">
+      <div class="stat-number" id="statJoins">—</div>
+      <div class="stat-label">Quieren Unirse</div>
+      <div class="stat-emoji">🙌</div>
+    </div>
+    <div class="stat-card gold">
+      <div class="stat-number" id="statFaqs">—</div>
+      <div class="stat-label">FAQs en BD</div>
+      <div class="stat-emoji">📚</div>
+    </div>
+  </div>
+
+  <!-- Content Grid -->
+  <div class="content-grid">
+
+    <!-- Test Chat -->
+    <div class="card">
+      <div class="card-header">
+        <h3>🧪 Probar Bot (sin WhatsApp)</h3>
+      </div>
+      <div class="card-body">
+        <div class="chat-box" id="chatBox">
+          <div class="chat-msg bot">¡Hola! Soy KurtBot. Escribe un mensaje para probarme 🔵🔴⚪</div>
+        </div>
+        <div class="chat-input-row">
+          <input type="text" id="testInput" placeholder="Escribe un mensaje..." onkeypress="if(event.key==='Enter') sendTestMessage()">
+          <button class="btn btn-primary" onclick="sendTestMessage()">Enviar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Topics / Stats -->
+    <div class="card">
+      <div class="card-header">
+        <h3>📊 Temas más Consultados</h3>
+        <button class="btn btn-outline btn-sm" onclick="loadStats()">↻ Actualizar</button>
+      </div>
+      <div class="card-body" id="topicsContainer">
+        <p class="text-muted">Cargando estadísticas...</p>
+      </div>
+    </div>
+
+    <!-- Broadcast -->
+    <div class="card">
+      <div class="card-header">
+        <h3>📣 Difusión Masiva</h3>
+      </div>
+      <div class="card-body">
+        <p class="text-muted" style="margin-bottom:1rem">Envía un mensaje a todos los usuarios que han interactuado con el bot. ⚠️ Usa con moderación.</p>
+        <textarea class="broadcast-area" id="broadcastMsg" placeholder="Escribe tu mensaje de campaña aquí...&#10;&#10;Ejemplo: ¡Faltan 30 días para el 22 de marzo! 🗳️ Recuerda votar por Kurt Reintsch - LIBRE. ¡El Boliviano Puede!"></textarea>
+        <div style="margin-top:1rem;display:flex;gap:0.75rem;align-items:center">
+          <button class="btn btn-red" onclick="sendBroadcast()">📤 Enviar a Todos</button>
+          <span class="text-muted" id="broadcastResult"></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Add FAQ -->
+    <div class="card">
+      <div class="card-header">
+        <h3>➕ Agregar Nueva Pregunta</h3>
+      </div>
+      <div class="card-body">
+        <div class="form-group">
+          <label>Categoría</label>
+          <select class="form-control" id="newCategory">
+            <option value="propuestas">Propuestas</option>
+            <option value="sobre_kurt">Sobre Kurt</option>
+            <option value="salud">Salud</option>
+            <option value="economia">Economía</option>
+            <option value="educacion">Educación</option>
+            <option value="como_participar">Cómo Participar</option>
+            <option value="elecciones">Elecciones</option>
+            <option value="general">General</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Pregunta</label>
+          <input type="text" class="form-control" id="newQuestion" placeholder="¿Qué hará Kurt con...?">
+        </div>
+        <div class="form-group">
+          <label>Respuesta</label>
+          <textarea class="broadcast-area" id="newAnswer" placeholder="Escribe la respuesta que el bot dará..." style="min-height:80px"></textarea>
+        </div>
+        <div class="form-group">
+          <label>Palabras clave (separadas por coma)</label>
+          <input type="text" class="form-control" id="newKeywords" placeholder="ej: empleo, trabajo, empresa">
+        </div>
+        <button class="btn btn-primary" onclick="addFaq()">💾 Guardar Pregunta</button>
+        <span id="addFaqResult" style="margin-left:1rem" class="text-muted"></span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- FAQ Table -->
+  <div class="card" style="margin-bottom:2rem">
+    <div class="card-header">
+      <h3>📚 Base de Conocimientos — FAQs</h3>
+      <button class="btn btn-outline btn-sm" onclick="loadFaqs()">↻ Recargar</button>
+    </div>
+    <div class="card-body" style="padding:0; overflow-x:auto">
+      <table class="faq-table" id="faqTable">
+        <thead>
+          <tr>
+            <th>Categoría</th>
+            <th>Pregunta</th>
+            <th>Respuesta (preview)</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody id="faqTableBody">
+          <tr><td colspan="4" style="text-align:center;padding:2rem;color:#999">Cargando...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<!-- ── EDIT MODAL ── -->
+<div class="modal-overlay" id="editModal">
+  <div class="modal">
+    <h3>✏️ Editar Pregunta</h3>
+    <input type="hidden" id="editId">
+    <div class="form-group">
+      <label>Pregunta</label>
+      <input type="text" class="form-control" id="editQuestion">
+    </div>
+    <div class="form-group">
+      <label>Respuesta</label>
+      <textarea class="broadcast-area" id="editAnswer" style="min-height:100px"></textarea>
+    </div>
+    <div class="form-group">
+      <label>Categoría</label>
+      <input type="text" class="form-control" id="editCategory">
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal()">Cancelar</button>
+      <button class="btn btn-primary" onclick="saveFaq()">💾 Guardar Cambios</button>
+    </div>
+  </div>
+</div>
+
+<script>
+let authToken = null;
+let pollInterval = null;
+
+// ── LOGIN ──────────────────────────────────────────────────
+function login() {
+  const pwd = document.getElementById('loginPassword').value;
+  authToken = pwd;
+  fetch('/api/stats', { headers: { Authorization: `Bearer ${pwd}` } })
+    .then(r => {
+      if (r.ok) {
+        document.getElementById('loginScreen').style.display = 'none';
+        document.getElementById('mainHeader').style.display = 'flex';
+        document.getElementById('dashboard').classList.add('visible');
+        initDashboard();
+      } else {
+        document.getElementById('loginError').style.display = 'block';
+        authToken = null;
+      }
+    })
+    .catch(() => { document.getElementById('loginError').style.display = 'block'; });
+}
+
+function authFetch(url, opts = {}) {
+  return fetch(url, {
+    ...opts,
+    headers: { ...(opts.headers || {}), Authorization: `Bearer ${authToken}`, 'Content-Type': 'application/json' }
+  });
+}
+
+// ── INIT ───────────────────────────────────────────────────
+function initDashboard() {
+  loadStats();
+  loadFaqs();
+  checkStatus();
+  pollInterval = setInterval(checkStatus, 5000);
+}
+
+// ── STATUS ─────────────────────────────────────────────────
+async function checkStatus() {
+  const r = await fetch('/api/status');
+  const d = await r.json();
+  const dot = document.getElementById('statusDot');
+  const txt = document.getElementById('statusText');
+  const qrBanner = document.getElementById('qrBanner');
+
+  if (d.connected) {
+    dot.className = 'status-dot connected';
+    txt.textContent = 'WhatsApp Conectado ✓';
+    qrBanner.style.display = 'none';
+  } else {
+    dot.className = 'status-dot disconnected';
+    txt.textContent = 'Sin Conexión';
+    qrBanner.style.display = 'flex';
+    if (d.hasQR) loadQR();
+  }
+}
+
+async function loadQR() {
+  const r = await fetch('/api/qr');
+  const d = await r.json();
+  const box = document.getElementById('qrBox');
+  if (d.status === 'pending' && d.qr) {
+    box.innerHTML = `<img src="${d.qr}" alt="QR Code">`;
+  } else if (d.status === 'loading') {
+    box.innerHTML = '<span style="font-size:2rem;animation:spin 1s linear infinite">⏳</span>';
+  } else if (d.status === 'already_connected') {
+    document.getElementById('qrBanner').style.display = 'none';
+  }
+}
+
+// ── STATS ──────────────────────────────────────────────────
+async function loadStats() {
+  const r = await authFetch('/api/stats');
+  if (!r.ok) return;
+  const d = await r.json();
+  document.getElementById('statMessages').textContent = d.totalMessages || 0;
+  document.getElementById('statUsers').textContent = d.uniqueUsersCount || 0;
+  document.getElementById('statJoins').textContent = d.joinRequests || 0;
+
+  // Topics
+  const topics = d.topQuestions || {};
+  const maxVal = Math.max(...Object.values(topics), 1);
+  const container = document.getElementById('topicsContainer');
+  if (Object.keys(topics).length === 0) {
+    container.innerHTML = '<p class="text-muted">Aún no hay datos de temas.</p>';
+    return;
+  }
+  const topicEmojis = { salud: '🏥', educación: '📚', empleo: '💼', votar: '🗳️', propuestas: '📋', kurt: '👤' };
+  container.innerHTML = Object.entries(topics)
+    .sort((a,b) => b[1]-a[1])
+    .map(([k,v]) => `
+      <div class="topic-bar">
+        <div class="topic-label">
+          <span>${topicEmojis[k] || '💬'} ${k}</span>
+          <span style="font-weight:700">${v}</span>
+        </div>
+        <div class="topic-track">
+          <div class="topic-fill" style="width:${(v/maxVal*100).toFixed(1)}%"></div>
+        </div>
+      </div>
+    `).join('');
+}
+
+// ── FAQS ───────────────────────────────────────────────────
+async function loadFaqs() {
+  const r = await authFetch('/api/knowledge');
+  if (!r.ok) return;
+  const d = await r.json();
+  document.getElementById('statFaqs').textContent = d.faqs.length;
+  const tbody = document.getElementById('faqTableBody');
+  tbody.innerHTML = d.faqs.map(f => `
+    <tr>
+      <td><span class="category-badge">${f.category || 'general'}</span></td>
+      <td style="max-width:220px">${f.question}</td>
+      <td style="max-width:280px;color:#546E7A;font-size:0.83rem">${f.answer.substring(0,100)}...</td>
+      <td>
+        <div class="td-actions">
+          <button class="btn btn-outline btn-sm" onclick="editFaq('${f.id}', ${JSON.stringify(f.question).replace(/'/g,"\\'")} , ${JSON.stringify(f.answer).replace(/'/g,"\\'")} , '${f.category}')">✏️</button>
+          <button class="btn btn-danger btn-sm" onclick="deleteFaq('${f.id}')">🗑️</button>
+        </div>
+      </td>
+    </tr>
+  `).join('');
+}
+
+async function addFaq() {
+  const question = document.getElementById('newQuestion').value.trim();
+  const answer = document.getElementById('newAnswer').value.trim();
+  const category = document.getElementById('newCategory').value;
+  const kw = document.getElementById('newKeywords').value;
+  const keywords = kw ? kw.split(',').map(k => k.trim().toLowerCase()) : [];
+  const resultEl = document.getElementById('addFaqResult');
+
+  if (!question || !answer) { resultEl.textContent = '⚠️ Completa pregunta y respuesta'; return; }
+
+  const r = await authFetch('/api/knowledge/faq', {
+    method: 'POST',
+    body: JSON.stringify({ question, answer, category, keywords })
+  });
+  if (r.ok) {
+    resultEl.textContent = '✅ Guardada!';
+    document.getElementById('newQuestion').value = '';
+    document.getElementById('newAnswer').value = '';
+    document.getElementById('newKeywords').value = '';
+    loadFaqs();
+    setTimeout(() => resultEl.textContent = '', 3000);
+  } else {
+    resultEl.textContent = '❌ Error al guardar';
+  }
+}
+
+function editFaq(id, question, answer, category) {
+  document.getElementById('editId').value = id;
+  document.getElementById('editQuestion').value = question;
+  document.getElementById('editAnswer').value = answer;
+  document.getElementById('editCategory').value = category;
+  document.getElementById('editModal').classList.add('open');
+}
+
+function closeModal() {
+  document.getElementById('editModal').classList.remove('open');
+}
+
+async function saveFaq() {
+  const id = document.getElementById('editId').value;
+  const question = document.getElementById('editQuestion').value;
+  const answer = document.getElementById('editAnswer').value;
+  const category = document.getElementById('editCategory').value;
+  const r = await authFetch(`/api/knowledge/faq/${id}`, {
+    method: 'PUT',
+    body: JSON.stringify({ question, answer, category })
+  });
+  if (r.ok) { closeModal(); loadFaqs(); }
+}
+
+async function deleteFaq(id) {
+  if (!confirm('¿Eliminar esta pregunta?')) return;
+  await authFetch(`/api/knowledge/faq/${id}`, { method: 'DELETE' });
+  loadFaqs();
+}
+
+// ── TEST CHAT ──────────────────────────────────────────────
+async function sendTestMessage() {
+  const input = document.getElementById('testInput');
+  const msg = input.value.trim();
+  if (!msg) return;
+  input.value = '';
+
+  const box = document.getElementById('chatBox');
+  box.innerHTML += `<div class="chat-msg user">${msg}</div>`;
+  box.innerHTML += `<div class="chat-msg typing">KurtBot está escribiendo...</div>`;
+  box.scrollTop = box.scrollHeight;
+
+  const r = await authFetch('/api/test-message', { method: 'POST', body: JSON.stringify({ message: msg }) });
+  const d = await r.json();
+
+  // Remove typing indicator
+  const typing = box.querySelector('.typing');
+  if (typing) typing.remove();
+
+  box.innerHTML += `<div class="chat-msg bot">${d.response}</div>`;
+  box.scrollTop = box.scrollHeight;
+}
+
+// ── BROADCAST ─────────────────────────────────────────────
+async function sendBroadcast() {
+  const message = document.getElementById('broadcastMsg').value.trim();
+  const result = document.getElementById('broadcastResult');
+  if (!message) { result.textContent = '⚠️ Escribe un mensaje primero'; return; }
+  if (!confirm(`¿Enviar este mensaje a TODOS los usuarios del bot?\n\n"${message.substring(0,100)}..."`)) return;
+
+  result.textContent = '⏳ Enviando...';
+  const r = await authFetch('/api/broadcast', { method: 'POST', body: JSON.stringify({ message }) });
+  const d = await r.json();
+  result.textContent = `✅ Enviado a ${d.sent} usuarios (${d.failed} fallidos)`;
+}
+</script>
+</body>
+</html>
