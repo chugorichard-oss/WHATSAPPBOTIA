@@ -208,7 +208,7 @@ Este mismo bot puede adaptarse para:
 Cloud & Infrastructure Engineer | Bolivia 🇧🇴
 
 - 💼 [linkedin.com/in/hugo-ramirez-cloud](https://linkedin.com/in/hugo-ramirez-cloud)
-- 🐙 GitHub: [@TU_USUARIO](https://github.com/chugorichard-oss)
+- 🐙 GitHub: [@chugorichard-oss](https://github.com/chugorichard-oss)
 
 > *Este proyecto fue desarrollado con asistencia de **Claude AI** (Anthropic) — un ejemplo real de cómo la IA puede acelerar el desarrollo de soluciones con impacto social.*
 
@@ -224,6 +224,6 @@ MIT License — libre para usar, modificar y distribuir con atribución.
 
 **Hecho con ❤️ para Bolivia 🇧🇴**
 
-*"El Boliviano Puede" — Kurt Reintsch, LIBRE La Paz 2026*
+*"El Boliviano Puede" —  La Paz 2026*
 
 </div>
